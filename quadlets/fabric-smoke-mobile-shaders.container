@@ -1,0 +1,15 @@
+[Unit]
+Description=Fabric verify 6/6 — mobile+double shader compile (feat/double-precision-mobile)
+After=fabric-smoke-loop.service
+[Container]
+Image=localhost/fabric-smoke
+Volume=/home/ernest.lee/Documents/godot/bin:/godot/bin:ro,z
+Volume=/home/ernest.lee/Documents/fabric-verify/assets:/assets:ro,z
+Volume=/home/ernest.lee/Documents/fabric-verify/bin:/smoke:ro,z
+Exec=/smoke/run-mobile-shaders.sh
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+TimeoutStartSec=180
+[Install]
+WantedBy=fabric-verify.target

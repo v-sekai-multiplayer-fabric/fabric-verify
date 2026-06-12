@@ -16,7 +16,7 @@ var peer: WebTransportPeer
 var my_id := 0
 var phase := "hub"
 var bot := OS.get_environment("BOT") == "1"
-var xr := OS.get_environment("XR") == "1"
+var xr := OS.get_environment("XR") == "1" or OS.has_feature("mobile")
 var xr_interface: XRInterface
 var xr_origin: XROrigin3D
 var right_hand: XRController3D
