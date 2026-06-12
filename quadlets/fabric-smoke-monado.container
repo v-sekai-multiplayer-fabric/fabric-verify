@@ -1,0 +1,10 @@
+[Unit]
+Description=Fabric verify 1/4 — headless OpenXR runtime smoke (Monado)
+[Container]
+Image=localhost/monado-headless
+Exec=bash -lc 'tail -f /dev/null | monado-service >/tmp/svc.log 2>&1 & for i in $(seq 1 24); do [ -S "$XDG_RUNTIME_DIR/monado_comp_ipc" ] && break; sleep 0.5; done; [ -S "$XDG_RUNTIME_DIR/monado_comp_ipc" ] && timeout 12 openxr_runtime_list 2>&1 | grep -q "Instance created"'
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+[Install]
+WantedBy=fabric-verify.target

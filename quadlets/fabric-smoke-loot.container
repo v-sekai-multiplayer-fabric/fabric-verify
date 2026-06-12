@@ -1,0 +1,14 @@
+[Unit]
+Description=Fabric verify 2/4 — loot wire parity vs Lean golden
+After=fabric-smoke-monado.service
+[Container]
+Image=localhost/fabric-smoke
+Volume=/home/ernest.lee/Documents/godot/bin:/godot/bin:ro,z
+Volume=/home/ernest.lee/Documents/fabric-verify/assets:/assets:ro,z
+Volume=/home/ernest.lee/Documents/fabric-verify/bin:/smoke:ro,z
+Exec=/smoke/run-loot.sh
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+[Install]
+WantedBy=fabric-verify.target
