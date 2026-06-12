@@ -1,0 +1,15 @@
+[Unit]
+Description=Fabric verify 5/5 — the playable loop end to end
+After=fabric-smoke-fourplayer.service
+[Container]
+Image=localhost/fabric-smoke
+Volume=/home/ernest.lee/Documents/godot/bin:/godot/bin:ro,z
+Volume=/home/ernest.lee/Documents/fabric-verify/assets:/assets:ro,z
+Volume=/home/ernest.lee/Documents/fabric-verify/bin:/smoke:ro,z
+Exec=/smoke/run-loop.sh
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+TimeoutStartSec=300
+[Install]
+WantedBy=fabric-verify.target
