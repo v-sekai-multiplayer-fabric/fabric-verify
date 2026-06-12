@@ -1,0 +1,15 @@
+[Unit]
+Description=Quest 3 one-eye mirror (scrcpy via host adb)
+[Container]
+ContainerName=quest-mirror
+Image=localhost/quest-mirror
+Network=host
+Environment=WAYLAND_DISPLAY=wayland-0
+Environment=XDG_RUNTIME_DIR=/run/user/1001
+Environment=ADB_SERVER_SOCKET=tcp:127.0.0.1:5037
+Volume=/run/user/1001/wayland-0:/run/user/1001/wayland-0:z
+SecurityLabelDisable=true
+[Service]
+Restart=on-failure
+[Install]
+WantedBy=default.target

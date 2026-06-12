@@ -1,0 +1,7 @@
+# Quest mirror: scrcpy in a container, window on the host Wayland, device via
+# the HOST adb server (ADB_SERVER_SOCKET) — no USB passthrough, no adb fights.
+FROM fedora:44
+RUN dnf -y install dnf-plugins-core && dnf -y copr enable zeno/scrcpy \
+    && dnf -y install scrcpy android-tools && dnf clean all
+ENV ADB_SERVER_SOCKET=tcp:127.0.0.1:5037
+CMD ["scrcpy", "--window-title", "Quest 3 — right eye", "--crop", "2064:2208:2064:0", "--max-size", "1100", "--no-audio"]
