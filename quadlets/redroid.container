@@ -1,0 +1,21 @@
+# Android 13 (x86_64) in a rootless podman quadlet via redroid. Exposes adb on :5555 so scrcpy
+# mirrors it (no VNC). binderfs is built into the host kernel; --privileged lets redroid mount it.
+# Connect:  adb connect localhost:5555 && scrcpy -s localhost:5555
+# Deploy a Godot Android export:  adb -s localhost:5555 install game.apk && adb shell monkey -p <pkg> 1
+[Unit]
+Description=redroid Android 13 (x86_64) — adb :5555, mirror with scrcpy
+
+[Container]
+Image=docker.io/redroid/redroid:13.0.0-latest
+ContainerName=redroid
+PublishPort=5555:5555
+Volume=%h/redroid-data:/data
+PodmanArgs=--privileged
+Exec=androidboot.redroid_width=1280 androidboot.redroid_height=720 androidboot.redroid_dpi=240 androidboot.redroid_fps=30 androidboot.redroid_gpu_mode=guest
+
+[Service]
+Restart=always
+TimeoutStartSec=180
+
+[Install]
+WantedBy=default.target

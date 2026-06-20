@@ -1,0 +1,33 @@
+# Run the host-built Godot 4.7 dev editor on vrm-game-project, inside a rootless podman quadlet,
+# rendering to the user's local Wayland session (GPU via /dev/dri + NVIDIA CDI). Auto-restarts.
+# Build the image first:  podman build -t localhost/godot-editor -f Containerfile.godot-editor .
+# Install:  cp godot-editor.container ~/.config/containers/systemd/ && systemctl --user daemon-reload
+#           && systemctl --user start godot-editor
+[Unit]
+Description=Godot 4.7 editor (vrm-game-project) on the local Wayland display
+
+[Container]
+Image=localhost/godot-editor
+# keep host uid 1001 inside so the wayland socket and bind-mounted files line up
+UserNS=keep-id
+# the local display
+Environment=WAYLAND_DISPLAY=wayland-0
+Environment=XDG_RUNTIME_DIR=/run/user/1001
+Environment=XDG_SESSION_TYPE=wayland
+Environment=HOME=/chibifire-assets-2026w24/files/loot-action-vertical-slice/vrm-game-project
+# mount the whole runtime dir so XDG_RUNTIME_DIR is a valid 0700 user-owned dir (the wayland socket lives in it)
+Volume=/run/user/1001:/run/user/1001
+# the host Godot binary + the project (and the godot-duckdb .so) live under this tree
+Volume=/chibifire-assets-2026w24/files/loot-action-vertical-slice:/chibifire-assets-2026w24/files/loot-action-vertical-slice:z
+# GPU: render node + card, plus the NVIDIA discrete GPU via CDI
+AddDevice=/dev/dri/renderD128
+AddDevice=/dev/dri/card1
+PodmanArgs=--device nvidia.com/gpu=all --group-add keep-groups
+Exec=/chibifire-assets-2026w24/files/loot-action-vertical-slice/godot/bin/godot.linuxbsd.editor.dev.x86_64 --display-driver wayland --rendering-driver opengl3 --path /chibifire-assets-2026w24/files/loot-action-vertical-slice/vrm-game-project -e
+
+[Service]
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=default.target

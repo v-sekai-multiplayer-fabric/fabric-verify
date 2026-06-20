@@ -1,0 +1,14 @@
+# Image for running the host-built Godot 4.7 dev editor inside a rootless podman quadlet on the
+# user's local Wayland display. Fedora rawhide base so glibc/libstdc++ match the fc44 host binary;
+# the GL/Vulkan/Wayland/X11 client libs + fonts/audio it dynamically links are installed here.
+# The Godot binary and project are bind-mounted by the quadlet (not copied in).
+FROM registry.fedoraproject.org/fedora:rawhide
+RUN dnf -y install \
+      mesa-vulkan-drivers mesa-dri-drivers vulkan-loader \
+      libglvnd-glx libglvnd-egl libglvnd-opengl \
+      libX11 libXcursor libXinerama libXrandr libXi libXext libxkbcommon libxkbcommon-x11 \
+      libwayland-client libwayland-cursor libwayland-egl \
+      fontconfig freetype dejavu-sans-fonts libdecor \
+      alsa-lib pulseaudio-libs systemd-libs \
+      tigervnc-server xorg-x11-server-utils \
+    && dnf clean all
